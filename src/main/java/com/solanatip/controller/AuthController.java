@@ -2,6 +2,7 @@ package com.solanatip.controller;
 
 import com.solanatip.dto.AuthDto;
 import com.solanatip.service.AuthService;
+import com.solanatip.service.EmailVerificationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final EmailVerificationService emailVerificationService;
 
     // ========== Email/Password ==========
 
@@ -57,5 +59,20 @@ public class AuthController {
             @Valid @RequestBody AuthDto.WalletRegisterRequest request,
             @RequestHeader("X-Wallet-Nonce") String nonce) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.walletRegister(request, nonce));
+    }
+
+    // ========== Email Verification ==========
+
+    @GetMapping("/verify-email")
+    public ResponseEntity<java.util.Map<String, String>> verifyEmail(@RequestParam String token) {
+        emailVerificationService.verifyEmail(token);
+        return ResponseEntity.ok(java.util.Map.of("message", "Email verified successfully!"));
+    }
+
+    @PostMapping("/resend-verification")
+    public ResponseEntity<java.util.Map<String, String>> resendVerification(
+            @RequestBody java.util.Map<String, String> body) {
+        emailVerificationService.resendVerification(body.get("username"));
+        return ResponseEntity.ok(java.util.Map.of("message", "Verification email sent"));
     }
 }

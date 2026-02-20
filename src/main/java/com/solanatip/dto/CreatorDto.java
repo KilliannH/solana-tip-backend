@@ -74,6 +74,7 @@ public class CreatorDto {
         private String displayName;
         private String bio;
         private String walletAddress;
+        private String email;
         private String avatarUrl;
         private String bannerUrl;
         private String themeColor;
@@ -81,6 +82,7 @@ public class CreatorDto {
         private String twitchUrl;
         private String tiktokUrl;
         private String twitterUrl;
+        private boolean emailVerified;
         private BigDecimal totalTipsReceived;
         private long tipCount;
         private LocalDateTime createdAt;

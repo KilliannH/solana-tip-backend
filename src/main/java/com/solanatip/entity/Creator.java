@@ -63,6 +63,12 @@ public class Creator {
     @Builder.Default
     private AuthProvider authProvider = AuthProvider.EMAIL;
 
+    @Builder.Default
+    private boolean emailVerified = false;
+
+    @Builder.Default
+    private boolean admin = false;
+
     // --- Relations ---
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

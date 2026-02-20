@@ -28,6 +28,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final WalletSignatureService walletSignatureService;
+    private final EmailVerificationService emailVerificationService;
     private final SecureRandom secureRandom = new SecureRandom();
 
     // ========== Email/Password Flow ==========
@@ -49,6 +50,9 @@ public class AuthService {
 
         creatorRepository.save(creator);
         log.info("Creator registered via email: {}", creator.getUsername());
+
+        // Send verification email (non-blocking)
+        emailVerificationService.sendVerificationEmail(creator);
 
         return buildAuthResponse(creator);
     }

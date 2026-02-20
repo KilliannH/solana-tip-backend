@@ -37,6 +37,9 @@ public class SecurityConfig {
                         // Tips — all public (anyone can tip, anyone can see history)
                         .requestMatchers("/api/v1/tips/**").permitAll()
 
+                        // Admin — requires auth (admin check done in controller)
+                        .requestMatchers("/api/v1/admin/**").authenticated()
+
                         // Everything else requires auth
                         .anyRequest().authenticated()
                 )
