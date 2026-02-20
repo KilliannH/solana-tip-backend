@@ -35,6 +35,13 @@ public class Creator {
 
     private String avatarUrl;
 
+    private String bannerUrl;
+
+    /** Neon theme color key: cyan, purple, pink, green, blue */
+    @Column(length = 20)
+    @Builder.Default
+    private String themeColor = "cyan";
+
     // --- Auth fields ---
 
     @Column(unique = true)
@@ -42,7 +49,6 @@ public class Creator {
 
     private String password;
 
-    /** Nonce used for wallet signature authentication */
     private String walletNonce;
 
     @Enumerated(EnumType.STRING)

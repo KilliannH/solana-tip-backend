@@ -37,6 +37,8 @@ public class CreatorService {
                 .bio(request.getBio())
                 .walletAddress(request.getWalletAddress())
                 .avatarUrl(request.getAvatarUrl())
+                .bannerUrl(request.getBannerUrl())
+                .themeColor(request.getThemeColor() != null ? request.getThemeColor() : "cyan")
                 .build();
 
         return toResponse(creatorRepository.save(creator));
@@ -65,15 +67,11 @@ public class CreatorService {
         Creator creator = creatorRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Creator not found: " + username));
 
-        if (request.getDisplayName() != null) {
-            creator.setDisplayName(request.getDisplayName());
-        }
-        if (request.getBio() != null) {
-            creator.setBio(request.getBio());
-        }
-        if (request.getAvatarUrl() != null) {
-            creator.setAvatarUrl(request.getAvatarUrl());
-        }
+        if (request.getDisplayName() != null) creator.setDisplayName(request.getDisplayName());
+        if (request.getBio() != null) creator.setBio(request.getBio());
+        if (request.getAvatarUrl() != null) creator.setAvatarUrl(request.getAvatarUrl());
+        if (request.getBannerUrl() != null) creator.setBannerUrl(request.getBannerUrl());
+        if (request.getThemeColor() != null) creator.setThemeColor(request.getThemeColor());
 
         return toResponse(creatorRepository.save(creator));
     }
@@ -98,6 +96,8 @@ public class CreatorService {
                 .bio(creator.getBio())
                 .walletAddress(creator.getWalletAddress())
                 .avatarUrl(creator.getAvatarUrl())
+                .bannerUrl(creator.getBannerUrl())
+                .themeColor(creator.getThemeColor())
                 .totalTipsReceived(tipRepository.sumAmountByCreatorIdAndStatus(creator.getId(), TipStatus.CONFIRMED))
                 .tipCount(tipRepository.countByCreatorIdAndStatus(creator.getId(), TipStatus.CONFIRMED))
                 .createdAt(creator.getCreatedAt())

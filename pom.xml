@@ -43,6 +43,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- AWS S3 -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>2.25.16</version>
+        </dependency>
+
         <!-- Security + JWT -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

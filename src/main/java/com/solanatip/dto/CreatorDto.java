@@ -32,6 +32,10 @@ public class CreatorDto {
         private String walletAddress;
 
         private String avatarUrl;
+        private String bannerUrl;
+
+        @Pattern(regexp = "^(cyan|purple|pink|green|blue)$", message = "Invalid theme color")
+        private String themeColor;
     }
 
     @Getter @Setter
@@ -45,6 +49,10 @@ public class CreatorDto {
         private String bio;
 
         private String avatarUrl;
+        private String bannerUrl;
+
+        @Pattern(regexp = "^(cyan|purple|pink|green|blue)$", message = "Invalid theme color")
+        private String themeColor;
     }
 
     @Getter @Setter
@@ -57,6 +65,8 @@ public class CreatorDto {
         private String bio;
         private String walletAddress;
         private String avatarUrl;
+        private String bannerUrl;
+        private String themeColor;
         private BigDecimal totalTipsReceived;
         private long tipCount;
         private LocalDateTime createdAt;
