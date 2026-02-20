@@ -28,7 +28,7 @@ public class EmailVerificationService {
     @Value("${app.base-url:https://solana-tip.com}")
     private String baseUrl;
 
-    @Value("${spring.mail.username:noreply@solana-tip.com}")
+    @Value("${app.mail.from:noreply@solana-tip.com}")
     private String fromEmail;
 
     /**
