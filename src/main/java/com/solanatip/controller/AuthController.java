@@ -1,0 +1,61 @@
+package com.solanatip.controller;
+
+import com.solanatip.dto.AuthDto;
+import com.solanatip.service.AuthService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/auth")
+@RequiredArgsConstructor
+@CrossOrigin(origins = "${app.cors.allowed-origins}")
+public class AuthController {
+
+    private final AuthService authService;
+
+    // ========== Email/Password ==========
+
+    @PostMapping("/register")
+    public ResponseEntity<AuthDto.AuthResponse> register(@Valid @RequestBody AuthDto.RegisterRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthDto.AuthResponse> login(@Valid @RequestBody AuthDto.LoginRequest request) {
+        return ResponseEntity.ok(authService.login(request));
+    }
+
+    // ========== Wallet Signature ==========
+
+    /**
+     * Step 1: Request a nonce for the wallet to sign.
+     * Returns the nonce + a human-readable message to sign.
+     * Also indicates if the wallet is already registered (login vs register flow).
+     */
+    @PostMapping("/wallet/nonce")
+    public ResponseEntity<AuthDto.WalletNonceResponse> requestNonce(@Valid @RequestBody AuthDto.WalletNonceRequest request) {
+        return ResponseEntity.ok(authService.generateNonce(request));
+    }
+
+    /**
+     * Step 2a: Login with wallet signature (existing wallet).
+     */
+    @PostMapping("/wallet/login")
+    public ResponseEntity<AuthDto.AuthResponse> walletLogin(@Valid @RequestBody AuthDto.WalletLoginRequest request) {
+        return ResponseEntity.ok(authService.walletLogin(request));
+    }
+
+    /**
+     * Step 2b: Register + login with wallet signature (new wallet).
+     * The nonce must have been requested in Step 1.
+     */
+    @PostMapping("/wallet/register")
+    public ResponseEntity<AuthDto.AuthResponse> walletRegister(
+            @Valid @RequestBody AuthDto.WalletRegisterRequest request,
+            @RequestHeader("X-Wallet-Nonce") String nonce) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.walletRegister(request, nonce));
+    }
+}
