@@ -36,6 +36,11 @@ public class CreatorDto {
 
         @Pattern(regexp = "^(cyan|purple|pink|green|blue)$", message = "Invalid theme color")
         private String themeColor;
+
+        private String youtubeUrl;
+        private String twitchUrl;
+        private String tiktokUrl;
+        private String twitterUrl;
     }
 
     @Getter @Setter
@@ -53,6 +58,11 @@ public class CreatorDto {
 
         @Pattern(regexp = "^(cyan|purple|pink|green|blue)$", message = "Invalid theme color")
         private String themeColor;
+
+        private String youtubeUrl;
+        private String twitchUrl;
+        private String tiktokUrl;
+        private String twitterUrl;
     }
 
     @Getter @Setter
@@ -67,6 +77,10 @@ public class CreatorDto {
         private String avatarUrl;
         private String bannerUrl;
         private String themeColor;
+        private String youtubeUrl;
+        private String twitchUrl;
+        private String tiktokUrl;
+        private String twitterUrl;
         private BigDecimal totalTipsReceived;
         private long tipCount;
         private LocalDateTime createdAt;

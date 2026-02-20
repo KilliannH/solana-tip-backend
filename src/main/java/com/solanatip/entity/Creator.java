@@ -42,6 +42,13 @@ public class Creator {
     @Builder.Default
     private String themeColor = "cyan";
 
+    // --- Social Links ---
+
+    private String youtubeUrl;
+    private String twitchUrl;
+    private String tiktokUrl;
+    private String twitterUrl;
+
     // --- Auth fields ---
 
     @Column(unique = true)

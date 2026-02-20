@@ -72,6 +72,10 @@ public class CreatorService {
         if (request.getAvatarUrl() != null) creator.setAvatarUrl(request.getAvatarUrl());
         if (request.getBannerUrl() != null) creator.setBannerUrl(request.getBannerUrl());
         if (request.getThemeColor() != null) creator.setThemeColor(request.getThemeColor());
+        if (request.getYoutubeUrl() != null) creator.setYoutubeUrl(request.getYoutubeUrl());
+        if (request.getTwitchUrl() != null) creator.setTwitchUrl(request.getTwitchUrl());
+        if (request.getTiktokUrl() != null) creator.setTiktokUrl(request.getTiktokUrl());
+        if (request.getTwitterUrl() != null) creator.setTwitterUrl(request.getTwitterUrl());
 
         return toResponse(creatorRepository.save(creator));
     }
@@ -98,6 +102,10 @@ public class CreatorService {
                 .avatarUrl(creator.getAvatarUrl())
                 .bannerUrl(creator.getBannerUrl())
                 .themeColor(creator.getThemeColor())
+                .youtubeUrl(creator.getYoutubeUrl())
+                .twitchUrl(creator.getTwitchUrl())
+                .tiktokUrl(creator.getTiktokUrl())
+                .twitterUrl(creator.getTwitterUrl())
                 .totalTipsReceived(tipRepository.sumAmountByCreatorIdAndStatus(creator.getId(), TipStatus.CONFIRMED))
                 .tipCount(tipRepository.countByCreatorIdAndStatus(creator.getId(), TipStatus.CONFIRMED))
                 .createdAt(creator.getCreatedAt())
