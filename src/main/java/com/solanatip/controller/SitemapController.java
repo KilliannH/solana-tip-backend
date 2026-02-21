@@ -29,6 +29,7 @@ public class SitemapController {
         // Static pages
         sb.append(url(baseUrl, "1.0", "weekly"));
         sb.append(url(baseUrl + "/creators", "0.9", "daily"));
+        sb.append(url(baseUrl + "/guide", "0.8", "monthly"));
         sb.append(url(baseUrl + "/terms", "0.3", "monthly"));
         sb.append(url(baseUrl + "/privacy", "0.3", "monthly"));
         sb.append(url(baseUrl + "/cookies", "0.3", "monthly"));
