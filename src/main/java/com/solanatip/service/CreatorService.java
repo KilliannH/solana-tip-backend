@@ -8,6 +8,9 @@ import com.solanatip.exception.ApiExceptions.ResourceNotFoundException;
 import com.solanatip.repository.CreatorRepository;
 import com.solanatip.repository.TipRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,6 +63,18 @@ public class CreatorService {
         return creatorRepository.findAll().stream()
                 .map(this::toResponse)
                 .toList();
+    }
+
+    public Page<CreatorDto.Response> getAllCreatorsPaginated(int page, int size, String search) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Creator> creators;
+        if (search != null && !search.isBlank()) {
+            creators = creatorRepository.findByUsernameContainingIgnoreCaseOrDisplayNameContainingIgnoreCase(
+                    search, search, pageRequest);
+        } else {
+            creators = creatorRepository.findAll(pageRequest);
+        }
+        return creators.map(this::toResponse);
     }
 
     @Transactional

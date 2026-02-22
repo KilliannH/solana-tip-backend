@@ -23,6 +23,7 @@ public class TipService {
     private final TipRepository tipRepository;
     private final CreatorService creatorService;
     private final SolanaRpcService solanaRpcService;
+    private final TipNotificationService tipNotificationService;
 
     /**
      * Record and verify a new tip.
@@ -69,6 +70,9 @@ public class TipService {
         log.info("Tip confirmed: {} SOL from {} to {} (tx: {})",
                 request.getAmountSol(), request.getSenderWalletAddress(),
                 creator.getUsername(), request.getTransactionSignature());
+
+        // Notify creator by email
+        tipNotificationService.sendTipNotification(creator, savedTip);
 
         return toResponse(savedTip);
     }

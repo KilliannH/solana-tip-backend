@@ -4,6 +4,7 @@ import com.solanatip.dto.CreatorDto;
 import com.solanatip.service.CreatorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,14 @@ public class CreatorController {
     @GetMapping
     public ResponseEntity<List<CreatorDto.Response>> getAllCreators() {
         return ResponseEntity.ok(creatorService.getAllCreators());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<CreatorDto.Response>> searchCreators(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(required = false) String q) {
+        return ResponseEntity.ok(creatorService.getAllCreatorsPaginated(page, size, q));
     }
 
     @PutMapping("/{username}")

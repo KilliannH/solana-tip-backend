@@ -2,6 +2,8 @@ package com.solanatip.repository;
 
 import com.solanatip.entity.Creator;
 import com.solanatip.entity.AuthProvider;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -22,4 +24,7 @@ public interface CreatorRepository extends JpaRepository<Creator, UUID> {
     boolean existsByWalletAddress(String walletAddress);
 
     Optional<Creator> findByAuthProviderAndOauthId(AuthProvider authProvider, String oauthId);
+
+    Page<Creator> findByUsernameContainingIgnoreCaseOrDisplayNameContainingIgnoreCase(
+            String username, String displayName, Pageable pageable);
 }
