@@ -151,6 +151,7 @@ public class AuthService {
                 .bio(request.getBio())
                 .avatarUrl(request.getAvatarUrl())
                 .authProvider(AuthProvider.WALLET)
+                .emailVerified(true)
                 .build();
 
         creatorRepository.save(creator);
