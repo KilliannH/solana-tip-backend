@@ -132,7 +132,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .username(username)
                 .displayName(displayName)
                 .email(email)
-                .emailVerified(email != null)
+                .emailVerified(true)
                 .authProvider(authProvider)
                 .oauthId(oauthId)
                 .avatarUrl(avatarUrl)
