@@ -63,12 +63,16 @@ public class TipNotificationService {
                 + "</div>"
                 : "";
 
+        String logoUrl = baseUrl + "/solanatip-email-logo.png";
+
         return "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head>"
                 + "<body style=\"margin:0;padding:0;background:#010409;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;\">"
                 + "<div style=\"max-width:520px;margin:0 auto;padding:32px 20px;\">"
-                // Header
+                // Header with logo image
                 + "<div style=\"text-align:center;margin-bottom:32px;\">"
-                + "<h1 style=\"color:#00f0ff;font-size:20px;margin:0;\">⚡ SolanaTip</h1>"
+                + "<a href=\"" + baseUrl + "\" style=\"text-decoration:none;\">"
+                + "<img src=\"" + logoUrl + "\" alt=\"SolanaTip\" height=\"40\" style=\"height:40px;\" />"
+                + "</a>"
                 + "</div>"
                 // Card
                 + "<div style=\"background:#0d1117;border:1px solid #1a2332;border-radius:16px;padding:32px;\">"
