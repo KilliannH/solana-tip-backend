@@ -168,7 +168,7 @@ public class AuthService {
         if (email != null && creatorRepository.findByEmail(email).isPresent()) {
             throw new DuplicateResourceException("Email is already registered");
         }
-        if (creatorRepository.existsByWalletAddress(walletAddress)) {
+        if (walletAddress != null && creatorRepository.existsByWalletAddress(walletAddress)) {
             throw new DuplicateResourceException("Wallet address is already registered");
         }
     }

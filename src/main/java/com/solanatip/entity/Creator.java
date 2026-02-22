@@ -30,7 +30,7 @@ public class Creator {
     @Column(length = 500)
     private String bio;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String walletAddress;
 
     private String avatarUrl;
@@ -57,6 +57,9 @@ public class Creator {
     private String password;
 
     private String walletNonce;
+
+    /** OAuth provider-specific user ID */
+    private String oauthId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

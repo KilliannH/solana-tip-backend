@@ -69,6 +69,7 @@ public class CreatorService {
 
         if (request.getDisplayName() != null) creator.setDisplayName(request.getDisplayName());
         if (request.getBio() != null) creator.setBio(request.getBio());
+        if (request.getWalletAddress() != null) creator.setWalletAddress(request.getWalletAddress());
         if (request.getAvatarUrl() != null) creator.setAvatarUrl(request.getAvatarUrl());
         if (request.getBannerUrl() != null) creator.setBannerUrl(request.getBannerUrl());
         if (request.getThemeColor() != null) creator.setThemeColor(request.getThemeColor());

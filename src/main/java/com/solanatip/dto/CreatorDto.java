@@ -28,7 +28,6 @@ public class CreatorDto {
         @Size(max = 500)
         private String bio;
 
-        @NotBlank(message = "Wallet address is required")
         private String walletAddress;
 
         private String avatarUrl;
@@ -52,6 +51,8 @@ public class CreatorDto {
 
         @Size(max = 500)
         private String bio;
+
+        private String walletAddress;
 
         private String avatarUrl;
         private String bannerUrl;

@@ -1,6 +1,7 @@
 package com.solanatip.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -18,15 +20,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+
+    @Value("${app.base-url:https://solana-tip.com}")
+    private String baseUrl;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   ClientRegistrationRepository clientRegistrationRepository) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // IF_REQUIRED allows sessions for OAuth2 flow (state parameter storage)
+                // JWT is still used for API auth via JwtAuthFilter
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
                         // Auth endpoints — public
                         .requestMatchers("/api/v1/auth/**").permitAll()
+
+                        // OAuth2 endpoints — public
+                        .requestMatchers("/api/v1/auth/oauth2/**").permitAll()
 
                         // Creators — GET is public, write operations require auth
                         .requestMatchers(HttpMethod.GET, "/api/v1/creators/**").permitAll()
@@ -34,17 +46,29 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/v1/creators/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/creators/**").authenticated()
 
-                        // Tips — all public (anyone can tip, anyone can see history)
+                        // Tips — all public
                         .requestMatchers("/api/v1/tips/**").permitAll()
 
                         // Sitemap
                         .requestMatchers("/sitemap.xml").permitAll()
 
-                        // Admin — requires auth (admin check done in controller)
+                        // Admin — requires auth
                         .requestMatchers("/api/v1/admin/**").authenticated()
 
                         // Everything else requires auth
                         .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .authorizationEndpoint(auth -> auth
+                                .baseUri("/api/v1/auth/oauth2")
+                        )
+                        .redirectionEndpoint(redirect -> redirect
+                                .baseUri("/api/v1/auth/oauth2/callback/*")
+                        )
+                        .successHandler(oAuth2SuccessHandler)
+                        .failureHandler((req, res, ex) -> {
+                            res.sendRedirect(baseUrl + "/auth?error=oauth_failed");
+                        })
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

@@ -2,5 +2,8 @@ package com.solanatip.entity;
 
 public enum AuthProvider {
     EMAIL,
-    WALLET
+    WALLET,
+    GOOGLE,
+    DISCORD,
+    TWITTER
 }
