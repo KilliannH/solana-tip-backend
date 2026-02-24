@@ -84,8 +84,19 @@ public class CreatorDto {
         private String tiktokUrl;
         private String twitterUrl;
         private boolean emailVerified;
+        private boolean notifyTipReceived;
+        private boolean notifyMarketing;
         private BigDecimal totalTipsReceived;
         private long tipCount;
         private LocalDateTime createdAt;
+    }
+
+    @Getter @Setter
+    @NoArgsConstructor @AllArgsConstructor
+    @Builder
+    public static class SettingsRequest {
+        private Boolean notifyTipReceived;
+        private Boolean notifyMarketing;
+        private String email;
     }
 }

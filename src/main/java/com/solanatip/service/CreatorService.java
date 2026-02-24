@@ -103,6 +103,18 @@ public class CreatorService {
         creatorRepository.delete(creator);
     }
 
+    @Transactional
+    public CreatorDto.Response updateSettings(String username, CreatorDto.SettingsRequest request) {
+        Creator creator = creatorRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Creator not found: " + username));
+
+        if (request.getNotifyTipReceived() != null) creator.setNotifyTipReceived(request.getNotifyTipReceived());
+        if (request.getNotifyMarketing() != null) creator.setNotifyMarketing(request.getNotifyMarketing());
+        if (request.getEmail() != null) creator.setEmail(request.getEmail().isBlank() ? null : request.getEmail());
+
+        return toResponse(creatorRepository.save(creator));
+    }
+
     Creator getCreatorEntityByUsername(String username) {
         return creatorRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Creator not found: " + username));
@@ -124,6 +136,8 @@ public class CreatorService {
                 .tiktokUrl(creator.getTiktokUrl())
                 .twitterUrl(creator.getTwitterUrl())
                 .emailVerified(creator.isEmailVerified())
+                .notifyTipReceived(creator.isNotifyTipReceived())
+                .notifyMarketing(creator.isNotifyMarketing())
                 .totalTipsReceived(tipRepository.sumAmountByCreatorIdAndStatus(creator.getId(), TipStatus.CONFIRMED))
                 .tipCount(tipRepository.countByCreatorIdAndStatus(creator.getId(), TipStatus.CONFIRMED))
                 .createdAt(creator.getCreatedAt())

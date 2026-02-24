@@ -72,6 +72,14 @@ public class Creator {
     @Builder.Default
     private boolean admin = false;
 
+    // --- Notification Preferences ---
+
+    @Builder.Default
+    private boolean notifyTipReceived = true;
+
+    @Builder.Default
+    private boolean notifyMarketing = true;
+
     // --- Relations ---
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

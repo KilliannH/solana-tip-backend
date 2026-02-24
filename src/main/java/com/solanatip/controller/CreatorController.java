@@ -46,6 +46,15 @@ public class CreatorController {
         return ResponseEntity.ok(creatorService.updateCreator(username, request));
     }
 
+    @PutMapping("/{username}/settings")
+    public ResponseEntity<CreatorDto.Response> updateSettings(
+            @PathVariable String username,
+            @RequestBody CreatorDto.SettingsRequest request,
+            Authentication authentication) {
+        assertOwnership(authentication, username);
+        return ResponseEntity.ok(creatorService.updateSettings(username, request));
+    }
+
     @DeleteMapping("/{username}")
     public ResponseEntity<Void> deleteCreator(@PathVariable String username, Authentication authentication) {
         assertOwnership(authentication, username);

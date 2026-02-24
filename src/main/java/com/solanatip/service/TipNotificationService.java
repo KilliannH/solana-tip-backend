@@ -30,6 +30,10 @@ public class TipNotificationService {
         if (creator.getEmail() == null || creator.getEmail().isBlank()) {
             return;
         }
+        if (!creator.isNotifyTipReceived()) {
+            log.debug("Tip notification skipped for {} (disabled)", creator.getUsername());
+            return;
+        }
 
         String senderName = tip.getSenderDisplayName() != null && !tip.getSenderDisplayName().isBlank()
                 ? tip.getSenderDisplayName()
