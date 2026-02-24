@@ -2,6 +2,7 @@ package com.solanatip.controller;
 
 import com.solanatip.dto.AuthDto;
 import com.solanatip.service.AuthService;
+import com.solanatip.service.CreatorService;
 import com.solanatip.service.EmailVerificationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final EmailVerificationService emailVerificationService;
+    private final CreatorService creatorService;
 
     // ========== Email/Password ==========
 
@@ -74,5 +76,21 @@ public class AuthController {
             @RequestBody java.util.Map<String, String> body) {
         emailVerificationService.resendVerification(body.get("username"));
         return ResponseEntity.ok(java.util.Map.of("message", "Verification email sent"));
+    }
+
+    // ========== Unsubscribe ==========
+
+    @GetMapping("/unsubscribe")
+    public ResponseEntity<java.util.Map<String, String>> unsubscribe(@RequestParam String u) {
+        try {
+            String username = new String(java.util.Base64.getUrlDecoder().decode(u), java.nio.charset.StandardCharsets.UTF_8);
+            com.solanatip.dto.CreatorDto.SettingsRequest settings = new com.solanatip.dto.CreatorDto.SettingsRequest();
+            settings.setNotifyTipReceived(false);
+            settings.setNotifyMarketing(false);
+            creatorService.updateSettings(username, settings);
+            return ResponseEntity.ok(java.util.Map.of("message", "Successfully unsubscribed"));
+        } catch (Exception e) {
+            return ResponseEntity.ok(java.util.Map.of("message", "Successfully unsubscribed"));
+        }
     }
 }

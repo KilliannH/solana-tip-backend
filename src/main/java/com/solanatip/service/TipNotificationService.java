@@ -69,6 +69,9 @@ public class TipNotificationService {
 
         String logoUrl = baseUrl + "/solanatip-email-logo.png";
 
+        String unsubscribeUrl = baseUrl + "/unsubscribe?u=" + java.util.Base64.getUrlEncoder().withoutPadding()
+                .encodeToString(creator.getUsername().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+
         return "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"></head>"
                 + "<body style=\"margin:0;padding:0;background:#010409;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;\">"
                 + "<div style=\"max-width:520px;margin:0 auto;padding:32px 20px;\">"
@@ -98,7 +101,9 @@ public class TipNotificationService {
                 // Footer
                 + "<p style=\"text-align:center;color:#484f58;font-size:12px;margin-top:24px;\">"
                 + "You're receiving this because someone tipped your SolanaTip page.<br>"
-                + "<a href=\"" + baseUrl + "\" style=\"color:#00f0ff;text-decoration:none;\">solana-tip.com</a>"
+                + "<a href=\"" + baseUrl + "/settings\" style=\"color:#484f58;text-decoration:underline;\">Manage notifications</a>"
+                + " · "
+                + "<a href=\"" + unsubscribeUrl + "\" style=\"color:#484f58;text-decoration:underline;\">Unsubscribe</a>"
                 + "</p>"
                 + "</div></body></html>";
     }
