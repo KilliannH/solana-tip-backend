@@ -49,6 +49,9 @@ public class SecurityConfig {
                         // Tips — all public
                         .requestMatchers("/api/v1/tips/**").permitAll()
 
+                        // Alerts SSE — public (OBS overlay)
+                        .requestMatchers("/api/v1/alerts/**").permitAll()
+
                         // Sitemap
                         .requestMatchers("/sitemap.xml").permitAll()
 

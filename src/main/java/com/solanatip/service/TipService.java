@@ -24,6 +24,7 @@ public class TipService {
     private final CreatorService creatorService;
     private final SolanaRpcService solanaRpcService;
     private final TipNotificationService tipNotificationService;
+    private final TipAlertService tipAlertService;
 
     /**
      * Record and verify a new tip.
@@ -73,6 +74,9 @@ public class TipService {
 
         // Notify creator by email
         tipNotificationService.sendTipNotification(creator, savedTip);
+
+        // Broadcast to OBS overlay
+        tipAlertService.broadcastTip(creator.getUsername(), savedTip);
 
         return toResponse(savedTip);
     }
