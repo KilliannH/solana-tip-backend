@@ -66,13 +66,12 @@ public class CreatorService {
     }
 
     public Page<CreatorDto.Response> getAllCreatorsPaginated(int page, int size, String search) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        PageRequest pageRequest = PageRequest.of(page, size);
         Page<Creator> creators;
         if (search != null && !search.isBlank()) {
-            creators = creatorRepository.findByUsernameContainingIgnoreCaseOrDisplayNameContainingIgnoreCase(
-                    search, search, pageRequest);
+            creators = creatorRepository.searchAllProFirst(search, pageRequest);
         } else {
-            creators = creatorRepository.findAll(pageRequest);
+            creators = creatorRepository.findAllProFirst(pageRequest);
         }
         return creators.map(this::toResponse);
     }

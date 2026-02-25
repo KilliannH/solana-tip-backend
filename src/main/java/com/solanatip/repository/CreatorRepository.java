@@ -5,6 +5,8 @@ import com.solanatip.entity.AuthProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -29,4 +31,12 @@ public interface CreatorRepository extends JpaRepository<Creator, UUID> {
             String username, String displayName, Pageable pageable);
 
     Optional<Creator> findByStripeCustomerId(String stripeCustomerId);
+
+    // Pro creators first, then by createdAt desc
+    @Query("SELECT c FROM Creator c ORDER BY CASE WHEN c.subscriptionPlan = 'PRO' THEN 0 ELSE 1 END, c.createdAt DESC")
+    Page<Creator> findAllProFirst(Pageable pageable);
+
+    // Pro creators first with search
+    @Query("SELECT c FROM Creator c WHERE LOWER(c.username) LIKE LOWER(CONCAT('%', :search, '%')) OR LOWER(c.displayName) LIKE LOWER(CONCAT('%', :search, '%')) ORDER BY CASE WHEN c.subscriptionPlan = 'PRO' THEN 0 ELSE 1 END, c.createdAt DESC")
+    Page<Creator> searchAllProFirst(@Param("search") String search, Pageable pageable);
 }
