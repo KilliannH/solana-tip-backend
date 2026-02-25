@@ -1,6 +1,5 @@
 package com.solanatip.controller;
 
-import com.solanatip.entity.Creator;
 import com.solanatip.entity.SubscriptionPlan;
 import com.solanatip.entity.TipStatus;
 import com.solanatip.repository.CreatorRepository;
@@ -32,30 +31,27 @@ public class OgController {
 
     /**
      * Dynamic OG image for a creator (1200x630 PNG).
-     * URL: /api/v1/creators/{username}/og-image
      */
-    @GetMapping(value = "/api/v1/creators/{username}/og-image")
+    @GetMapping("/api/v1/creators/{username}/og-image")
     public ResponseEntity<byte[]> getOgImage(@PathVariable String username) {
-        return creatorRepository.findByUsername(username)
-                .map(creator -> {
-                    try {
-                        byte[] imageBytes = ogImageService.generateOgImage(creator);
-                        return ResponseEntity.ok()
-                                .contentType(MediaType.IMAGE_PNG)
-                                .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic())
-                                .body(imageBytes);
-                    } catch (Exception e) {
-                        log.error("Failed to generate OG image for {}: {}", username, e.getMessage());
-                        return ResponseEntity.internalServerError().<byte[]>build();
-                    }
-                })
-                .orElse(ResponseEntity.notFound().build());
+        if (creatorRepository.findByUsername(username).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        try {
+            byte[] imageBytes = ogImageService.generateOgImage(username);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_PNG)
+                    .cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic())
+                    .body(imageBytes);
+        } catch (Exception e) {
+            log.error("Failed to generate OG image for {}: {}", username, e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     /**
      * Lightweight HTML page with OG meta tags for social crawlers.
-     * Nginx proxies bot user agents to this endpoint for /creator/{username}.
-     * URL: /api/v1/creators/{username}/meta
      */
     @GetMapping(value = "/api/v1/creators/{username}/meta", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<String> getCreatorMeta(@PathVariable String username) {
