@@ -152,6 +152,8 @@ public class StripeService {
 
         String customerId = subscription.getCustomer();
         String status = subscription.getStatus();
+        log.info("Subscription details — cancelAtPeriodEnd: {}, currentPeriodEnd: {}, status: {}",
+                subscription.getCancelAtPeriodEnd(), subscription.getCurrentPeriodEnd(), status);
 
         creatorRepository.findByStripeCustomerId(customerId).ifPresent(creator -> {
             if ("active".equals(status) || "trialing".equals(status)) {
