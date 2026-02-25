@@ -49,6 +49,12 @@ public class SecurityConfig {
                         // Tips — all public
                         .requestMatchers("/api/v1/tips/**").permitAll()
 
+                        // Stripe webhook — public (Stripe calls this)
+                        .requestMatchers("/api/v1/subscription/webhook").permitAll()
+
+                        // Subscription management — requires auth (except webhook above)
+                        .requestMatchers("/api/v1/subscription/**").authenticated()
+
                         // Alerts SSE — public (OBS overlay)
                         .requestMatchers("/api/v1/alerts/**").permitAll()
 

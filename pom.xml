@@ -56,6 +56,13 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+        <!-- Stripe -->
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>26.8.0</version>
+        </dependency>
+
         <!-- Security + JWT -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

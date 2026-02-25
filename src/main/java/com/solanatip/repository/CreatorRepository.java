@@ -27,4 +27,6 @@ public interface CreatorRepository extends JpaRepository<Creator, UUID> {
 
     Page<Creator> findByUsernameContainingIgnoreCaseOrDisplayNameContainingIgnoreCase(
             String username, String displayName, Pageable pageable);
+
+    Optional<Creator> findByStripeCustomerId(String stripeCustomerId);
 }

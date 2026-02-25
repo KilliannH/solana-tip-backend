@@ -138,6 +138,7 @@ public class CreatorService {
                 .emailVerified(creator.isEmailVerified())
                 .notifyTipReceived(creator.isNotifyTipReceived())
                 .notifyMarketing(creator.isNotifyMarketing())
+                .subscriptionPlan(creator.getSubscriptionPlan().name())
                 .totalTipsReceived(tipRepository.sumAmountByCreatorIdAndStatus(creator.getId(), TipStatus.CONFIRMED))
                 .tipCount(tipRepository.countByCreatorIdAndStatus(creator.getId(), TipStatus.CONFIRMED))
                 .createdAt(creator.getCreatedAt())

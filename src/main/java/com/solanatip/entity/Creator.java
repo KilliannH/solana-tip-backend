@@ -80,6 +80,20 @@ public class Creator {
     @Builder.Default
     private boolean notifyMarketing = true;
 
+    // --- Stripe Subscription ---
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private SubscriptionPlan subscriptionPlan = SubscriptionPlan.FREE;
+
+    @Column(unique = true)
+    private String stripeCustomerId;
+
+    private String stripeSubscriptionId;
+
+    private LocalDateTime subscriptionExpiresAt;
+
     // --- Relations ---
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
