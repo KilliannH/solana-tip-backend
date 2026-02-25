@@ -156,18 +156,26 @@ public class StripeService {
         creatorRepository.findByStripeCustomerId(customerId).ifPresent(creator -> {
             if ("active".equals(status) || "trialing".equals(status)) {
                 creator.setSubscriptionPlan(SubscriptionPlan.PRO);
-                // Update expiration from current period end
-                if (subscription.getCurrentPeriodEnd() != null) {
+
+                // Track cancellation: user cancelled but still active until period end
+                if (Boolean.TRUE.equals(subscription.getCancelAtPeriodEnd())
+                        && subscription.getCurrentPeriodEnd() != null) {
                     creator.setSubscriptionExpiresAt(
                             LocalDateTime.ofInstant(
                                     Instant.ofEpochSecond(subscription.getCurrentPeriodEnd()),
                                     ZoneId.systemDefault()
                             )
                     );
+                    log.info("Subscription cancelled for {} — active until {}",
+                            creator.getUsername(), creator.getSubscriptionExpiresAt());
+                } else {
+                    // Active and renewing — clear any previous expiration
+                    creator.setSubscriptionExpiresAt(null);
                 }
             } else {
                 // past_due, unpaid, canceled, incomplete_expired
                 creator.setSubscriptionPlan(SubscriptionPlan.FREE);
+                creator.setSubscriptionExpiresAt(null);
             }
             creatorRepository.save(creator);
             log.info("Subscription updated for {}: status={}, plan={}",

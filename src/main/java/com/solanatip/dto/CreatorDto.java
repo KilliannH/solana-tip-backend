@@ -87,6 +87,7 @@ public class CreatorDto {
         private boolean notifyTipReceived;
         private boolean notifyMarketing;
         private String subscriptionPlan;
+        private LocalDateTime subscriptionExpiresAt;
         private BigDecimal totalTipsReceived;
         private long tipCount;
         private LocalDateTime createdAt;
