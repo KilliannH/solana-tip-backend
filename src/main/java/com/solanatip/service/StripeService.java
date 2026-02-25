@@ -70,14 +70,9 @@ public class StripeService {
         // Reuse existing Stripe customer if we have one
         if (creator.getStripeCustomerId() != null) {
             builder.setCustomer(creator.getStripeCustomerId());
-        } else {
-            // Pre-fill email for new customers
-            SessionCreateParams.CustomerCreation customerCreation =
-                    SessionCreateParams.CustomerCreation.ALWAYS;
-            builder.setCustomerCreation(customerCreation);
-            if (creator.getEmail() != null) {
-                builder.setCustomerEmail(creator.getEmail());
-            }
+        } else if (creator.getEmail() != null) {
+            // Pre-fill email — Stripe auto-creates the customer in subscription mode
+            builder.setCustomerEmail(creator.getEmail());
         }
 
         Session session = Session.create(builder.build());
