@@ -152,22 +152,29 @@ public class StripeService {
 
         String customerId = subscription.getCustomer();
         String status = subscription.getStatus();
-        log.info("Subscription details — cancelAtPeriodEnd: {}, currentPeriodEnd: {}, status: {}",
-                subscription.getCancelAtPeriodEnd(), subscription.getCurrentPeriodEnd(), status);
 
         creatorRepository.findByStripeCustomerId(customerId).ifPresent(creator -> {
             if ("active".equals(status) || "trialing".equals(status)) {
                 creator.setSubscriptionPlan(SubscriptionPlan.PRO);
 
                 // Track cancellation: user cancelled but still active until period end
-                if (Boolean.TRUE.equals(subscription.getCancelAtPeriodEnd())
-                        && subscription.getCurrentPeriodEnd() != null) {
-                    creator.setSubscriptionExpiresAt(
-                            LocalDateTime.ofInstant(
-                                    Instant.ofEpochSecond(subscription.getCurrentPeriodEnd()),
-                                    ZoneId.systemDefault()
-                            )
-                    );
+                if (Boolean.TRUE.equals(subscription.getCancelAtPeriodEnd())) {
+                    // Try currentPeriodEnd first, then cancelAt as fallback
+                    Long endTimestamp = subscription.getCurrentPeriodEnd() != null
+                            ? subscription.getCurrentPeriodEnd()
+                            : subscription.getCancelAt();
+
+                    if (endTimestamp != null) {
+                        creator.setSubscriptionExpiresAt(
+                                LocalDateTime.ofInstant(
+                                        Instant.ofEpochSecond(endTimestamp),
+                                        ZoneId.systemDefault()
+                                )
+                        );
+                    } else {
+                        // Last resort: estimate 30 days from now
+                        creator.setSubscriptionExpiresAt(LocalDateTime.now().plusDays(30));
+                    }
                     log.info("Subscription cancelled for {} — active until {}",
                             creator.getUsername(), creator.getSubscriptionExpiresAt());
                 } else {
