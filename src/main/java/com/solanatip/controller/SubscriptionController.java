@@ -3,6 +3,7 @@ package com.solanatip.controller;
 import com.solanatip.entity.Creator;
 import com.solanatip.repository.CreatorRepository;
 import com.solanatip.service.StripeService;
+import com.stripe.exception.EventDataObjectDeserializationException;
 import com.stripe.exception.StripeException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -88,7 +89,7 @@ public class SubscriptionController {
         try {
             stripeService.handleWebhook(payload, sigHeader);
             return ResponseEntity.ok("ok");
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | EventDataObjectDeserializationException e) {
             log.error("Webhook processing failed: {}", e.getMessage());
             return ResponseEntity.badRequest().body("Webhook error: " + e.getMessage());
         }

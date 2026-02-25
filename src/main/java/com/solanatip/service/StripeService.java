@@ -4,6 +4,7 @@ import com.solanatip.entity.Creator;
 import com.solanatip.entity.SubscriptionPlan;
 import com.solanatip.repository.CreatorRepository;
 import com.stripe.Stripe;
+import com.stripe.exception.EventDataObjectDeserializationException;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.*;
@@ -103,7 +104,7 @@ public class StripeService {
      * Process a Stripe webhook event.
      */
     @Transactional
-    public void handleWebhook(String payload, String sigHeader) {
+    public void handleWebhook(String payload, String sigHeader) throws EventDataObjectDeserializationException {
         Event event;
         try {
             event = Webhook.constructEvent(payload, sigHeader, webhookSecret);
@@ -123,9 +124,9 @@ public class StripeService {
         }
     }
 
-    private void handleCheckoutCompleted(Event event) {
+    private void handleCheckoutCompleted(Event event) throws EventDataObjectDeserializationException {
         Session session = (Session) event.getDataObjectDeserializer()
-                .getObject().orElseThrow();
+                .deserializeUnsafe();
 
         String creatorId = session.getMetadata().get("creator_id");
         String customerId = session.getCustomer();
@@ -145,9 +146,9 @@ public class StripeService {
         });
     }
 
-    private void handleSubscriptionUpdated(Event event) {
+    private void handleSubscriptionUpdated(Event event) throws EventDataObjectDeserializationException {
         Subscription subscription = (Subscription) event.getDataObjectDeserializer()
-                .getObject().orElseThrow();
+                .deserializeUnsafe();
 
         String customerId = subscription.getCustomer();
         String status = subscription.getStatus();
@@ -174,9 +175,9 @@ public class StripeService {
         });
     }
 
-    private void handleSubscriptionDeleted(Event event) {
+    private void handleSubscriptionDeleted(Event event) throws EventDataObjectDeserializationException {
         Subscription subscription = (Subscription) event.getDataObjectDeserializer()
-                .getObject().orElseThrow();
+                .deserializeUnsafe();
 
         String customerId = subscription.getCustomer();
 
@@ -188,9 +189,9 @@ public class StripeService {
         });
     }
 
-    private void handlePaymentFailed(Event event) {
+    private void handlePaymentFailed(Event event) throws EventDataObjectDeserializationException {
         Invoice invoice = (Invoice) event.getDataObjectDeserializer()
-                .getObject().orElseThrow();
+                .deserializeUnsafe();
 
         String customerId = invoice.getCustomer();
 
