@@ -39,7 +39,9 @@ public class SecurityConfig {
 
                         // OAuth2 endpoints — public
                         .requestMatchers("/api/v1/auth/oauth2/**").permitAll()
-
+                        // OG images & meta — public (social crawlers)
+                        .requestMatchers(HttpMethod.GET, "/api/v1/creators/*/og-image").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/creators/*/meta").permitAll()
                         // Creators — GET is public, write operations require auth
                         .requestMatchers(HttpMethod.GET, "/api/v1/creators/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/creators/**").authenticated()

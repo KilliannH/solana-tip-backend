@@ -34,7 +34,7 @@ public class OgController {
      * Dynamic OG image for a creator (1200x630 PNG).
      * URL: /api/v1/creators/{username}/og-image
      */
-    @GetMapping(value = "/api/v1/creators/{username}/og-image", produces = MediaType.IMAGE_PNG_VALUE)
+    @GetMapping(value = "/api/v1/creators/{username}/og-image")
     public ResponseEntity<byte[]> getOgImage(@PathVariable String username) {
         return creatorRepository.findByUsername(username)
                 .map(creator -> {
