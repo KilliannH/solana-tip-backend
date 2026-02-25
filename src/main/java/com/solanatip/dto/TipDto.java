@@ -26,7 +26,7 @@ public class TipDto {
         private String senderDisplayName;
 
         @NotNull(message = "Amount is required")
-        @DecimalMin(value = "0.001", message = "Minimum tip is 0.001 SOL")
+        @DecimalMin(value = "0.01", message = "Minimum tip is 0.01 SOL")
         private BigDecimal amountSol;
 
         @NotBlank(message = "Transaction signature is required")
