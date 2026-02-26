@@ -91,6 +91,7 @@ public class CreatorService {
         if (request.getTwitchUrl() != null) creator.setTwitchUrl(request.getTwitchUrl());
         if (request.getTiktokUrl() != null) creator.setTiktokUrl(request.getTiktokUrl());
         if (request.getTwitterUrl() != null) creator.setTwitterUrl(request.getTwitterUrl());
+        if (request.getShowQrCode() != null) creator.setShowQrCode(request.getShowQrCode());
 
         return toResponse(creatorRepository.save(creator));
     }
@@ -139,6 +140,7 @@ public class CreatorService {
                 .notifyMarketing(creator.isNotifyMarketing())
                 .subscriptionPlan(creator.getSubscriptionPlan().name())
                 .subscriptionExpiresAt(creator.getSubscriptionExpiresAt())
+                .showQrCode(creator.isShowQrCode())
                 .totalTipsReceived(tipRepository.sumAmountByCreatorIdAndStatus(creator.getId(), TipStatus.CONFIRMED))
                 .tipCount(tipRepository.countByCreatorIdAndStatus(creator.getId(), TipStatus.CONFIRMED))
                 .createdAt(creator.getCreatedAt())

@@ -64,6 +64,7 @@ public class CreatorDto {
         private String twitchUrl;
         private String tiktokUrl;
         private String twitterUrl;
+        private Boolean showQrCode;
     }
 
     @Getter @Setter
@@ -88,6 +89,7 @@ public class CreatorDto {
         private boolean notifyMarketing;
         private String subscriptionPlan;
         private LocalDateTime subscriptionExpiresAt;
+        private boolean showQrCode;
         private BigDecimal totalTipsReceived;
         private long tipCount;
         private LocalDateTime createdAt;

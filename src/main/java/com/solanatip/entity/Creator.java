@@ -114,6 +114,9 @@ public class Creator {
     @Column(length = 500)
     private String alertImageUrl;
 
+    @Builder.Default
+    private boolean showQrCode = false;
+
     // --- Relations ---
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
