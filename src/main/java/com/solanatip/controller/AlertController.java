@@ -70,7 +70,8 @@ public class AlertController {
         if (request.getAlertAnimation() != null) creator.setAlertAnimation(request.getAlertAnimation());
         if (request.getAlertSound() != null) creator.setAlertSound(request.getAlertSound());
         if (request.getAlertDuration() != null) creator.setAlertDuration(request.getAlertDuration());
-        if (request.getAlertImageUrl() != null) creator.setAlertImageUrl(request.getAlertImageUrl());
+        // Always update image — null clears it back to default ⚡
+        creator.setAlertImageUrl(request.getAlertImageUrl());
 
         creatorRepository.save(creator);
 
