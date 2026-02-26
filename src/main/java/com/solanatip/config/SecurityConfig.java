@@ -39,9 +39,7 @@ public class SecurityConfig {
 
                         // OAuth2 endpoints — public
                         .requestMatchers("/api/v1/auth/oauth2/**").permitAll()
-                        // OG images & meta — public (social crawlers)
-                        .requestMatchers(HttpMethod.GET, "/api/v1/creators/*/og-image").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/creators/*/meta").permitAll()
+
                         // Creators — GET is public, write operations require auth
                         .requestMatchers(HttpMethod.GET, "/api/v1/creators/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/creators/**").authenticated()
@@ -57,7 +55,8 @@ public class SecurityConfig {
                         // Subscription management — requires auth (except webhook above)
                         .requestMatchers("/api/v1/subscription/**").authenticated()
 
-                        // Alerts SSE — public (OBS overlay)
+                        // Alerts SSE — public (OBS overlay), but PUT requires auth
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/alerts/**").authenticated()
                         .requestMatchers("/api/v1/alerts/**").permitAll()
 
                         // Sitemap

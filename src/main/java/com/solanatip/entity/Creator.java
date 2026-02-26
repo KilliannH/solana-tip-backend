@@ -94,6 +94,26 @@ public class Creator {
 
     private LocalDateTime subscriptionExpiresAt;
 
+    // --- OBS Alert Customization (Pro) ---
+
+    @Column(length = 20)
+    @Builder.Default
+    private String alertColor = "cyan";
+
+    @Column(length = 20)
+    @Builder.Default
+    private String alertAnimation = "slide";
+
+    @Column(length = 20)
+    @Builder.Default
+    private String alertSound = "chime";
+
+    @Builder.Default
+    private int alertDuration = 8;
+
+    @Column(length = 500)
+    private String alertImageUrl;
+
     // --- Relations ---
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
