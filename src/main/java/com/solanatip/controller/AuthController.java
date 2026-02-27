@@ -65,6 +65,20 @@ public class AuthController {
 
     // ========== Email Verification ==========
 
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthDto.AuthResponse> refresh(@Valid @RequestBody AuthDto.RefreshRequest request) {
+        return ResponseEntity.ok(authService.refreshToken(request.getRefreshToken()));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<java.util.Map<String, String>> logout(@RequestBody java.util.Map<String, String> body) {
+        String username = body.get("username");
+        if (username != null) {
+            authService.logout(username);
+        }
+        return ResponseEntity.ok(java.util.Map.of("message", "Logged out successfully"));
+    }
+
     @GetMapping("/verify-email")
     public ResponseEntity<java.util.Map<String, String>> verifyEmail(@RequestParam String token) {
         emailVerificationService.verifyEmail(token);

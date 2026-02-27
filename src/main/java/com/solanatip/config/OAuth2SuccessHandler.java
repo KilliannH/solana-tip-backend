@@ -29,6 +29,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private final CreatorRepository creatorRepository;
     private final JwtService jwtService;
+    private final com.solanatip.service.RefreshTokenService refreshTokenService;
 
     @Value("${app.base-url:https://solana-tip.com}")
     private String baseUrl;
@@ -113,10 +114,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             }
         }
 
-        // Generate JWT
+        // Generate JWT + Refresh Token
         String jwt = jwtService.generateToken(creator.getUsername(), creator.getWalletAddress());
+        String refreshToken = refreshTokenService.createRefreshToken(creator);
 
         String redirectUrl = baseUrl + "/auth/callback?token=" + URLEncoder.encode(jwt, StandardCharsets.UTF_8)
+                + "&refreshToken=" + URLEncoder.encode(refreshToken, StandardCharsets.UTF_8)
                 + "&username=" + URLEncoder.encode(creator.getUsername(), StandardCharsets.UTF_8);
 
         log.info("OAuth {} login successful for user: {}", provider, creator.getUsername());

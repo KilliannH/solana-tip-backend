@@ -27,6 +27,7 @@ public class AuthService {
     private final CreatorRepository creatorRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
     private final WalletSignatureService walletSignatureService;
     private final EmailVerificationService emailVerificationService;
     private final SecureRandom secureRandom = new SecureRandom();
@@ -175,13 +176,36 @@ public class AuthService {
     }
 
     private AuthDto.AuthResponse buildAuthResponse(Creator creator) {
-        String token = jwtService.generateToken(creator.getUsername(), creator.getWalletAddress());
+        String accessToken = jwtService.generateToken(creator.getUsername(), creator.getWalletAddress());
+        String refreshToken = refreshTokenService.createRefreshToken(creator);
         return AuthDto.AuthResponse.builder()
-                .token(token)
+                .token(accessToken)
+                .refreshToken(refreshToken)
                 .type("Bearer")
                 .username(creator.getUsername())
                 .walletAddress(creator.getWalletAddress())
                 .build();
+    }
+
+    @Transactional
+    public AuthDto.AuthResponse refreshToken(String refreshTokenValue) {
+        RefreshTokenService.RotateResult result = refreshTokenService.rotateRefreshToken(refreshTokenValue);
+        Creator creator = result.creator();
+        String accessToken = jwtService.generateToken(creator.getUsername(), creator.getWalletAddress());
+        return AuthDto.AuthResponse.builder()
+                .token(accessToken)
+                .refreshToken(result.refreshToken())
+                .type("Bearer")
+                .username(creator.getUsername())
+                .walletAddress(creator.getWalletAddress())
+                .build();
+    }
+
+    @Transactional
+    public void logout(String username) {
+        Creator creator = creatorRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Creator not found"));
+        refreshTokenService.revokeAllTokens(creator);
     }
 
     private String generateSecureNonce() {

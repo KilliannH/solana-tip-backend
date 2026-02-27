@@ -124,8 +124,19 @@ public class AuthDto {
     @Builder
     public static class AuthResponse {
         private String token;
+        private String refreshToken;
         private String type;
         private String username;
         private String walletAddress;
+    }
+
+    // ========== Refresh Token ==========
+
+    @Getter @Setter
+    @NoArgsConstructor @AllArgsConstructor
+    @Builder
+    public static class RefreshRequest {
+        @NotBlank(message = "Refresh token is required")
+        private String refreshToken;
     }
 }
