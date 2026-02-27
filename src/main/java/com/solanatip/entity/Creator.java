@@ -117,6 +117,24 @@ public class Creator {
     @Builder.Default
     private boolean showQrCode = false;
 
+    // --- Page Customization (Pro) ---
+
+    @Column(length = 200)
+    private String customThankMessage;
+
+    /** Comma-separated suggested amounts, e.g. "1,5,10" */
+    @Column(length = 100)
+    private String customTipAmounts;
+
+    @Column(precision = 18, scale = 9)
+    private java.math.BigDecimal goalTargetSol;
+
+    @Column(length = 120)
+    private String goalDescription;
+
+    @Builder.Default
+    private boolean goalEnabled = false;
+
     // --- Relations ---
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

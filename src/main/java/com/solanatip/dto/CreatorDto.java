@@ -65,6 +65,11 @@ public class CreatorDto {
         private String tiktokUrl;
         private String twitterUrl;
         private Boolean showQrCode;
+        private String customThankMessage;
+        private String customTipAmounts;
+        private java.math.BigDecimal goalTargetSol;
+        private String goalDescription;
+        private Boolean goalEnabled;
     }
 
     @Getter @Setter
@@ -90,6 +95,11 @@ public class CreatorDto {
         private String subscriptionPlan;
         private LocalDateTime subscriptionExpiresAt;
         private boolean showQrCode;
+        private String customThankMessage;
+        private String customTipAmounts;
+        private BigDecimal goalTargetSol;
+        private String goalDescription;
+        private boolean goalEnabled;
         private BigDecimal totalTipsReceived;
         private long tipCount;
         private LocalDateTime createdAt;

@@ -92,6 +92,11 @@ public class CreatorService {
         if (request.getTiktokUrl() != null) creator.setTiktokUrl(request.getTiktokUrl());
         if (request.getTwitterUrl() != null) creator.setTwitterUrl(request.getTwitterUrl());
         if (request.getShowQrCode() != null) creator.setShowQrCode(request.getShowQrCode());
+        if (request.getCustomThankMessage() != null) creator.setCustomThankMessage(request.getCustomThankMessage().isBlank() ? null : request.getCustomThankMessage());
+        if (request.getCustomTipAmounts() != null) creator.setCustomTipAmounts(request.getCustomTipAmounts().isBlank() ? null : request.getCustomTipAmounts());
+        if (request.getGoalTargetSol() != null) creator.setGoalTargetSol(request.getGoalTargetSol());
+        if (request.getGoalDescription() != null) creator.setGoalDescription(request.getGoalDescription().isBlank() ? null : request.getGoalDescription());
+        if (request.getGoalEnabled() != null) creator.setGoalEnabled(request.getGoalEnabled());
 
         return toResponse(creatorRepository.save(creator));
     }
@@ -141,6 +146,11 @@ public class CreatorService {
                 .subscriptionPlan(creator.getSubscriptionPlan().name())
                 .subscriptionExpiresAt(creator.getSubscriptionExpiresAt())
                 .showQrCode(creator.isShowQrCode())
+                .customThankMessage(creator.getCustomThankMessage())
+                .customTipAmounts(creator.getCustomTipAmounts())
+                .goalTargetSol(creator.getGoalTargetSol())
+                .goalDescription(creator.getGoalDescription())
+                .goalEnabled(creator.isGoalEnabled())
                 .totalTipsReceived(tipRepository.sumAmountByCreatorIdAndStatus(creator.getId(), TipStatus.CONFIRMED))
                 .tipCount(tipRepository.countByCreatorIdAndStatus(creator.getId(), TipStatus.CONFIRMED))
                 .createdAt(creator.getCreatedAt())
