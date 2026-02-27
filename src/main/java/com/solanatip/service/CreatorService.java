@@ -2,6 +2,7 @@ package com.solanatip.service;
 
 import com.solanatip.dto.CreatorDto;
 import com.solanatip.entity.Creator;
+import com.solanatip.entity.SubscriptionPlan;
 import com.solanatip.entity.TipStatus;
 import com.solanatip.exception.ApiExceptions.DuplicateResourceException;
 import com.solanatip.exception.ApiExceptions.ResourceNotFoundException;
@@ -91,12 +92,15 @@ public class CreatorService {
         if (request.getTwitchUrl() != null) creator.setTwitchUrl(request.getTwitchUrl());
         if (request.getTiktokUrl() != null) creator.setTiktokUrl(request.getTiktokUrl());
         if (request.getTwitterUrl() != null) creator.setTwitterUrl(request.getTwitterUrl());
-        if (request.getShowQrCode() != null) creator.setShowQrCode(request.getShowQrCode());
-        if (request.getCustomThankMessage() != null) creator.setCustomThankMessage(request.getCustomThankMessage().isBlank() ? null : request.getCustomThankMessage());
-        if (request.getCustomTipAmounts() != null) creator.setCustomTipAmounts(request.getCustomTipAmounts().isBlank() ? null : request.getCustomTipAmounts());
-        if (request.getGoalTargetSol() != null) creator.setGoalTargetSol(request.getGoalTargetSol());
-        if (request.getGoalDescription() != null) creator.setGoalDescription(request.getGoalDescription().isBlank() ? null : request.getGoalDescription());
-        if (request.getGoalEnabled() != null) creator.setGoalEnabled(request.getGoalEnabled());
+        // Pro-only fields — silently ignore if not Pro
+        if (creator.getSubscriptionPlan() == SubscriptionPlan.PRO) {
+            if (request.getShowQrCode() != null) creator.setShowQrCode(request.getShowQrCode());
+            if (request.getCustomThankMessage() != null) creator.setCustomThankMessage(request.getCustomThankMessage().isBlank() ? null : request.getCustomThankMessage());
+            if (request.getCustomTipAmounts() != null) creator.setCustomTipAmounts(request.getCustomTipAmounts().isBlank() ? null : request.getCustomTipAmounts());
+            if (request.getGoalTargetSol() != null) creator.setGoalTargetSol(request.getGoalTargetSol());
+            if (request.getGoalDescription() != null) creator.setGoalDescription(request.getGoalDescription().isBlank() ? null : request.getGoalDescription());
+            if (request.getGoalEnabled() != null) creator.setGoalEnabled(request.getGoalEnabled());
+        }
 
         return toResponse(creatorRepository.save(creator));
     }
@@ -126,6 +130,8 @@ public class CreatorService {
     }
 
     private CreatorDto.Response toResponse(Creator creator) {
+        boolean isPro = creator.getSubscriptionPlan() == SubscriptionPlan.PRO;
+
         return CreatorDto.Response.builder()
                 .id(creator.getId())
                 .username(creator.getUsername())
@@ -145,12 +151,13 @@ public class CreatorService {
                 .notifyMarketing(creator.isNotifyMarketing())
                 .subscriptionPlan(creator.getSubscriptionPlan().name())
                 .subscriptionExpiresAt(creator.getSubscriptionExpiresAt())
-                .showQrCode(creator.isShowQrCode())
-                .customThankMessage(creator.getCustomThankMessage())
-                .customTipAmounts(creator.getCustomTipAmounts())
-                .goalTargetSol(creator.getGoalTargetSol())
-                .goalDescription(creator.getGoalDescription())
-                .goalEnabled(creator.isGoalEnabled())
+                // Pro-only fields — return defaults for Free users
+                .showQrCode(isPro && creator.isShowQrCode())
+                .customThankMessage(isPro ? creator.getCustomThankMessage() : null)
+                .customTipAmounts(isPro ? creator.getCustomTipAmounts() : null)
+                .goalTargetSol(isPro ? creator.getGoalTargetSol() : null)
+                .goalDescription(isPro ? creator.getGoalDescription() : null)
+                .goalEnabled(isPro && creator.isGoalEnabled())
                 .totalTipsReceived(tipRepository.sumAmountByCreatorIdAndStatus(creator.getId(), TipStatus.CONFIRMED))
                 .tipCount(tipRepository.countByCreatorIdAndStatus(creator.getId(), TipStatus.CONFIRMED))
                 .createdAt(creator.getCreatedAt())
