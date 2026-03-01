@@ -49,6 +49,9 @@ public class SecurityConfig {
                         // Tips — all public
                         .requestMatchers("/api/v1/tips/**").permitAll()
 
+                        // Activity feed — public
+                        .requestMatchers("/api/v1/activity/**").permitAll()
+
                         // Stripe webhook — public (Stripe calls this)
                         .requestMatchers("/api/v1/subscription/webhook").permitAll()
 

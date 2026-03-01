@@ -57,4 +57,10 @@ public interface TipRepository extends JpaRepository<Tip, UUID> {
 
     @Query("SELECT t FROM Tip t WHERE t.creator.id = :creatorId AND t.status = 'CONFIRMED' ORDER BY t.createdAt DESC")
     List<Tip> getRecentConfirmedTips(@Param("creatorId") UUID creatorId, Pageable pageable);
+
+    @Query("SELECT t FROM Tip t JOIN FETCH t.creator WHERE t.status = 'CONFIRMED' ORDER BY t.createdAt DESC")
+    List<Tip> getRecentConfirmedTipsGlobal(Pageable pageable);
+
+    @Query("SELECT t.creator, SUM(t.amountSol) FROM Tip t WHERE t.status = 'CONFIRMED' GROUP BY t.creator HAVING SUM(t.amountSol) >= 1 ORDER BY SUM(t.amountSol) DESC")
+    List<Object[]> getCreatorTotals();
 }
